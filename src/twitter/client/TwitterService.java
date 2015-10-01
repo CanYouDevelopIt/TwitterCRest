@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
@@ -22,7 +23,7 @@ public class TwitterService {
 		
 	public static Twitter TWITTER;
 		
-	public static void loadTwitter(){
+	public static void login(){
 		
         try {
             ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -44,13 +45,14 @@ public class TwitterService {
 	}
 	
 	@GET
-	@Path("/test")
+	@Path("/timeline")
 	@Produces("application/json")
 	public Response getUserTimeline(){
 
 		List<Status> statuses;
 		String result ="";
-		loadTwitter();
+		if (TWITTER == null)
+			login();
 
 		try {
 			statuses = TWITTER.getHomeTimeline();
@@ -67,5 +69,20 @@ public class TwitterService {
 		}
 
 		return Response.status(200).entity(result).build();
+	}
+	
+	@GET
+	@Path("/tweet/{text}")
+	@Produces("text/xml")
+	public void sendTweet(@PathParam("text") String text) {
+
+		if (TWITTER == null)
+			login();
+		
+		try {
+		TWITTER.updateStatus(text);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
