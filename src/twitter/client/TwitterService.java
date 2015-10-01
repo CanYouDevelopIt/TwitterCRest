@@ -13,19 +13,46 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
+import twitter4j.conf.ConfigurationBuilder;
 
 @Path("/twitterservice")
 public class TwitterService {
+		
+	public static Twitter TWITTER;
+		
+	public static void loadTwitter(){
+		
+        try {
+            ConfigurationBuilder cb = new ConfigurationBuilder();
+            cb.setDebugEnabled(true)
+                    .setOAuthConsumerKey("tn9B8rJuMH3bmgKVp7FvQD0xh")
+                    .setOAuthConsumerSecret("INhpHm7gPicywvRdTUdFEUu7A28hpU7z095LfavDJOeBy4F7y1")
+                    .setOAuthAccessToken("634219313-PkCQMvKxBVdBYODAGIkxScEC5rfHhojOPmZ1709U")
+                    .setOAuthAccessTokenSecret("ikVJ073Z4RyNVOsNkLkAZ58DLFs2SwGG2eYSoorcaxUxo");
+            TwitterFactory tf = new TwitterFactory(cb.build());
+            TWITTER = tf.getInstance();
+            TWITTER.setOAuthConsumer("tn9B8rJuMH3bmgKVp7FvQD0xh", "INhpHm7gPicywvRdTUdFEUu7A28hpU7z095LfavDJOeBy4F7y1");
+            //requestToken = TWITTER.getOAuthRequestToken();
+            //openWebpage(new URI(requestToken.getAuthorizationURL()));
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		
+	}
+	
 	@GET
 	@Produces("application/json")
 	public Response getUserTimeline(){
 
-		Twitter twitter = TwitterFactory.getSingleton();
 		List<Status> statuses;
 		String result ="";
+		loadTwitter();
+
 		try {
-			statuses = twitter.getHomeTimeline();
+			statuses = TWITTER.getHomeTimeline();
 			
 			for (Status s : statuses) {
 				JSONObject jsonObject = new JSONObject();
