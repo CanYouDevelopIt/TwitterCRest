@@ -1,4 +1,4 @@
-package twitter.client;
+package twitter.frame;
 
 import java.net.URL;
 import java.util.List;
