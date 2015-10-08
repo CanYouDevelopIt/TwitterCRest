@@ -8,6 +8,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import twitter4j.ResponseList;
@@ -50,27 +51,29 @@ public class TwitterService {
 	@Path("/timeline")
 	@Produces("application/json")
 	public Response getUserTimeline(){
-
+		
+		JSONArray listStatus = new JSONArray();
 		List<Status> statuses;
-		String result ="";
+		
 		if (TWITTER == null)
 			login();
 
 		try {
 			statuses = TWITTER.getHomeTimeline();
-
+			
 			for (Status s : statuses) {
-				JSONObject jsonObject = new JSONObject();
-				jsonObject.put("Status", s);
-				result += " "+jsonObject;
+				JSONObject jStatus = new JSONObject();
+				jStatus.append("text", s.getText());
+				jStatus.append("date", s.getCreatedAt().toString());
+				jStatus.append("user", s.getUser().getScreenName());
+				listStatus.put(jStatus);
 			}
-			System.out.println("ici");
 
 		} catch (TwitterException e) {
 			e.printStackTrace();
 		}
 
-		return Response.status(200).entity(result).build();
+		return Response.status(200).entity(listStatus.toString()).build();
 	}
 
 	@GET
