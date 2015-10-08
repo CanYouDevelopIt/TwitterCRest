@@ -89,36 +89,29 @@ public class TwitterService {
 	}
 
 	@GET
-	@Path("/friendstimeline")
+	@Path("/friendstimeline/{user}")
 	@Produces("application/json")
-	public Response getFriendsTimeline(){
+	public Response getFriendsTimeline(@PathParam("user") String user){
 
 		String result ="";
 		if (TWITTER == null)
 			login();
 
-		String[] srch = new String[] {"PSG_inside"};
-		try {
-			
-			ResponseList<User> users = TWITTER.lookupUsers(srch);
-			for (User user : users) {
-				System.out.println("Friend's Name " + user.getName());
-				if (user.getStatus() != null) 
-				{
-					System.out.println("Friend timeline");
-					List<Status> statuses = TWITTER.getUserTimeline(user.getName());
-					for (Status s : statuses) 
-					{
-						JSONObject jsonObject = new JSONObject();
-						jsonObject.put("Status", s);
-						result += " "+jsonObject;    
-					}
-				}
-			}
-			
-		}catch (TwitterException e) {
-			e.printStackTrace();
-		}
+        try {
+            List<Status> statuses;
+            statuses = TWITTER.getUserTimeline(user);
+            System.out.println("Showing @" + user + "'s user timeline.");
+            for (Status status : statuses) {
+            	JSONObject jsonObject = new JSONObject();
+				jsonObject.put("Status", status);
+				result += " "+jsonObject;
+                System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
+            }
+        } catch (TwitterException te) {
+            te.printStackTrace();
+            System.out.println("Failed to get timeline: " + te.getMessage());
+            System.exit(-1);
+        }
 
 		return Response.status(200).entity(result).build();
 	}
