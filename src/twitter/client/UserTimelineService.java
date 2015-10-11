@@ -16,6 +16,8 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
 import twitter4j.conf.ConfigurationBuilder;
 
 @Path("/usertimeline")
@@ -90,4 +92,18 @@ public class UserTimelineService {
 		}
 		return Response.status(200).entity(url.toString()).build();
 	}
+	
+	@GET
+	@Path("/auth")
+	@Produces("text/plain")
+	public Response OAuth(){
+		
+		if (TWITTER == null)
+			login();
+		
+		Boolean reponse = (TWITTER != null);
+	
+		return Response.status(200).entity(reponse.toString()).build();
+	}
+	
 }
