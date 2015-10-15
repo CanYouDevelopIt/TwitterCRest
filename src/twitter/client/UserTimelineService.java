@@ -36,9 +36,6 @@ public class UserTimelineService {
 			.setOAuthAccessTokenSecret("ikVJ073Z4RyNVOsNkLkAZ58DLFs2SwGG2eYSoorcaxUxo");
 			TwitterFactory tf = new TwitterFactory(cb.build());
 			TWITTER = tf.getInstance();
-			//TWITTER.setOAuthConsumer("tn9B8rJuMH3bmgKVp7FvQD0xh", "INhpHm7gPicywvRdTUdFEUu7A28hpU7z095LfavDJOeBy4F7y1");
-			//requestToken = TWITTER.getOAuthRequestToken();
-			//openWebpage(new URI(requestToken.getAuthorizationURL()));
 
 		} catch (Exception e) {
 			e.printStackTrace();
