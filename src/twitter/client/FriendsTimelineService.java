@@ -61,6 +61,7 @@ public class FriendsTimelineService {
 				jStatus.append("text", s.getText());
 				jStatus.append("date", s.getCreatedAt().toString());
 				jStatus.append("user", s.getUser().getScreenName());
+				jStatus.append("image", s.getUser().getProfileImageURL());
 				listStatus.put(jStatus);
             }
         } catch (TwitterException te) {
