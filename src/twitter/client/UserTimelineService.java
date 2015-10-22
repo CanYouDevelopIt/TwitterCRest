@@ -92,6 +92,24 @@ public class UserTimelineService {
 	}
 	
 	@GET
+	@Path("/screenname")
+	@Produces("text/plain")
+	public Response getScreenName(){
+
+		if (TWITTER == null)
+			login();
+		User user = null;
+		URL url = null;
+		try{
+			user = TWITTER.showUser(TWITTER.getId());
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return Response.status(200).entity(user.getScreenName()).build();
+	}
+	
+	@GET
 	@Path("/auth")
 	@Produces("text/plain")
 	public Response OAuth(){
