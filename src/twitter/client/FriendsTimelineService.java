@@ -15,6 +15,7 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 
 @Path("/friendstimeline")
@@ -72,5 +73,31 @@ public class FriendsTimelineService {
 
 		return Response.status(200).entity(listStatus.toString()).build();
 	}
+	
+	@GET
+	@Path("/get")
+	@Produces("application/json")
+	public Response getFriendsList(){
+		JSONArray listFriends = new JSONArray();
+		List<User> followers;
+		if (TWITTER == null)
+			login();
+		
+		try {
+			followers = TWITTER.getFollowersList(TWITTER.getId(), -1);
+			for (User u : followers) {
+            	JSONObject jUser = new JSONObject();
+				jUser.append("name", u.getName());
+				jUser.append("screenname", u.getScreenName());
+				jUser.append("image", u.getProfileImageURL());
+				listFriends.put(jUser);
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return Response.status(200).entity(listFriends.toString()).build();
+	}
+	
 
 }
