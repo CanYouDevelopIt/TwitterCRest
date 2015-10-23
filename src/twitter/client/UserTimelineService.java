@@ -99,7 +99,6 @@ public class UserTimelineService {
 		if (TWITTER == null)
 			login();
 		User user = null;
-		URL url = null;
 		try{
 			user = TWITTER.showUser(TWITTER.getId());
 			
@@ -121,5 +120,31 @@ public class UserTimelineService {
 	
 		return Response.status(200).entity(reponse.toString()).build();
 	}
+	
+	@GET
+	@Path("/user")
+	@Produces("text/plain")
+	public Response getUser(){
+		if (TWITTER == null)
+			login();
+		User user = null;
+
+		JSONObject jUser = new JSONObject();
+		try{
+			user = TWITTER.showUser(TWITTER.getId());
+			jUser.append("screenname", user.getScreenName());
+			jUser.append("name", user.getName());
+			jUser.append("image", user.getProfileImageURL());
+			jUser.append("background", user.getProfileBackgroundColor());
+			jUser.append("followers", user.getFollowersCount());
+			jUser.append("followed", user.getFriendsCount());
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return Response.status(200).entity(jUser.toString()).build();
+	}
+	
+	
 	
 }
